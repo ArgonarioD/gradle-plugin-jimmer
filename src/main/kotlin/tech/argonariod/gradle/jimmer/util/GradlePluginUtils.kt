@@ -1,21 +1,9 @@
 package tech.argonariod.gradle.jimmer.util
 
-import org.gradle.api.Project
 import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import tech.argonariod.gradle.jimmer.MavenArtifactIds
-
-internal fun Project.findClasspathArtifactModuleVersion(moduleName: String): String? {
-    return this.buildscript
-        .configurations
-        .getByName("classpath")
-        .resolvedConfiguration
-        .resolvedArtifacts
-        .map { it.moduleVersion.id }
-        .firstOrNull { it.name == moduleName }
-        ?.version
-}
 
 @Suppress("NOTHING_TO_INLINE")
 internal inline fun DependencyHandler.create(groupId: String, artifactId: String, version: String): Dependency =

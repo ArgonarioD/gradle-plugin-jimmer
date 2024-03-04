@@ -35,14 +35,17 @@ abstract class JimmerExtension {
 
     @get:Nested
     abstract val dto: JimmerDtoConfiguration
+    @Suppress("unused")
     fun dto(action: Action<in JimmerDtoConfiguration>) = action.execute(dto)
 
     @get:Nested
     abstract val client: JimmerClientConfiguration
+    @Suppress("unused")
     fun client(action: Action<in JimmerClientConfiguration>) = action.execute(client)
 
     @get:Nested
     abstract val java: JimmerJavaOnlyConfiguration
+    @Suppress("unused")
     fun java(action: Action<JimmerJavaOnlyConfiguration>) = action.execute(java)
 }
 
@@ -89,6 +92,7 @@ abstract class JimmerClientConfiguration {
 abstract class JimmerJavaOnlyConfiguration {
     @get:Nested
     abstract val source: JimmerJavaSourceConfiguration
+    @Suppress("unused")
     fun source(action: Action<JimmerJavaSourceConfiguration>) = action.execute(source)
 
     /**

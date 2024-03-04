@@ -3,7 +3,6 @@ package tech.argonariod.gradle.jimmer
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotContain
-import org.gradle.testkit.runner.GradleRunner
 import java.nio.file.FileSystems
 
 class KotlinProjectSpec : FunSpec({
