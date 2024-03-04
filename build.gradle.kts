@@ -21,6 +21,7 @@ dependencies {
 }
 
 gradlePlugin {
+    website = "https://github.com/ArgonarioD/gradle-plugin-jimmer"
     vcsUrl = "https://github.com/ArgonarioD/gradle-plugin-jimmer"
     plugins {
         create("jimmerPlugin") {
