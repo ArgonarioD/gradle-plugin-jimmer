@@ -224,5 +224,9 @@ class KotlinProjectSpec : FunSpec({
                 break
             }
         }
+        quarkusGenerateCodeDependencyConfigured shouldBe true
+        quarkusGenerateCodeDevDependencyConfigured shouldBe true
+        jimmerDependencyConfigured shouldBe true
+        jimmerKspDependencyConfigured shouldBe true
     }
 })
