@@ -1,4 +1,4 @@
-package tech.argonariod.gradle.jimmer
+package tech.argonariod.gradle.jimmer.kotlin
 
 import com.google.devtools.ksp.gradle.KspExtension
 import com.google.devtools.ksp.gradle.KspGradleSubplugin
@@ -7,6 +7,9 @@ import org.gradle.api.Task
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
+import tech.argonariod.gradle.jimmer.JimmerExtension
+import tech.argonariod.gradle.jimmer.MavenArtifactIds
+import tech.argonariod.gradle.jimmer.getJimmerVersion
 import tech.argonariod.gradle.jimmer.util.*
 
 internal fun Project.configureAsKotlinProject(jimmerExtension: JimmerExtension) {

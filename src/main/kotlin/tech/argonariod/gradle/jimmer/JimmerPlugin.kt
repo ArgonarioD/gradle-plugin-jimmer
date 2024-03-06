@@ -2,6 +2,8 @@ package tech.argonariod.gradle.jimmer
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import tech.argonariod.gradle.jimmer.java.configureAsJavaProject
+import tech.argonariod.gradle.jimmer.kotlin.configureAsKotlinProject
 
 @Suppress("unused")
 class JimmerPlugin : Plugin<Project> {

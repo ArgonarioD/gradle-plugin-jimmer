@@ -1,7 +1,10 @@
-package tech.argonariod.gradle.jimmer
+package tech.argonariod.gradle.jimmer.java
 
 import org.gradle.api.Project
 import org.gradle.api.tasks.compile.JavaCompile
+import tech.argonariod.gradle.jimmer.JimmerExtension
+import tech.argonariod.gradle.jimmer.MavenArtifactIds
+import tech.argonariod.gradle.jimmer.getJimmerVersion
 import tech.argonariod.gradle.jimmer.util.*
 
 internal fun Project.configureAsJavaProject(jimmerExtension: JimmerExtension) {
