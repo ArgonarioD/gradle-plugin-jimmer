@@ -14,6 +14,7 @@ internal object MavenArtifactIds {
 
     const val JIMMER_APT_ARTIFACT_ID = "jimmer-apt"
     const val JIMMER_KSP_ARTIFACT_ID = "jimmer-ksp"
+    const val JIMMER_MAPSTRUCT_APT_ARTIFACT_ID = "jimmer-mapstruct-apt"
 
     const val QUARKUS_PLUGIN_ID = "io.quarkus"
     const val QUARKUS_JIMMER_GROUP_ID = "io.github.flynndi"

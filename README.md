@@ -18,6 +18,7 @@ English | <a href="README_zh_CN.md">简体中文</a>
     - Java: `jimmer-sql` and `jimmer-apt`
     - Kotlin: `jimmer-sql-kotlin` and `jimmer-ksp`
 - If the project is a Spring Boot project, use `jimmer-spring-boot-starter` instead of `jimmer-sql` and `jimmer-sql-kotlin`.
+- If the project depends on MapStruct with Kotlin and KAPT, add the `jimmer-mapstruct-apt` kapt dependency automatically.
 - Supports one-configuration addition and version management of dependencies for embedding Jimmer in Swagger UI.
 - Supports one-configuration addition and version management of the **unofficial** Quarkus extension dependency `io.github.flynndi:quarkus-jimmer`.
 - If the project is a Quarkus Kotlin project, it automatically resolves the circular dependency between Quarkus and the ksp code generation tasks that prevents your build.

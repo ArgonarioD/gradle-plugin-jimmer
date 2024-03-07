@@ -28,3 +28,6 @@ internal inline val ConfigurationContainer.kspConfiguration
 internal inline val ConfigurationContainer.aptConfiguration
     get() = getByName("annotationProcessor")
 
+internal inline val ConfigurationContainer.kaptConfiguration
+    get() = getByName("kapt")
+

@@ -146,6 +146,54 @@ class KotlinProjectSpec : FunSpec({
         jimmerKspDependencyConfigured shouldBe true
     }
 
+    test("project with mapstruct") {
+        val gradleProject = createTestProjectFiles("test-project")
+        gradleProject.buildFile.writeText(
+            """
+            plugins {
+                kotlin("jvm") version "${kotlinVersion}"
+                id("tech.argonariod.gradle-plugin-jimmer")
+                id("com.google.devtools.ksp") version "${kotlinVersion}+"
+                kotlin("kapt") version "${kotlinVersion}"
+            }
+            
+            repositories {
+                mavenCentral()
+            }
+            
+            jimmer {
+                version = "latest.release"
+            }
+            
+            dependencies {
+                implementation("org.mapstruct:mapstruct:1.5.3.Final")
+                kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
+            }
+            """.trimIndent()
+        )
+        val result = gradleProject.gradleRunnerWithArguments("dependencies").build()
+
+        var jimmerDependencyConfigured = false
+        var jimmerKspDependencyConfigured = false
+        var jimmerMapstructKaptDependencyConfigured = false
+
+        for (line in result.output.lineSequence()) {
+            if (!jimmerDependencyConfigured && line.contains("org.babyfish.jimmer:jimmer-sql-kotlin")) {
+                jimmerDependencyConfigured = true
+            } else if (!jimmerKspDependencyConfigured && line.contains("org.babyfish.jimmer:jimmer-ksp")) {
+                jimmerKspDependencyConfigured = true
+            } else if (!jimmerMapstructKaptDependencyConfigured && line.contains("org.babyfish.jimmer:jimmer-mapstruct-apt")) {
+                jimmerMapstructKaptDependencyConfigured = true
+            }
+            if (jimmerDependencyConfigured && jimmerKspDependencyConfigured && jimmerMapstructKaptDependencyConfigured) {
+                break
+            }
+        }
+        jimmerDependencyConfigured shouldBe true
+        jimmerKspDependencyConfigured shouldBe true
+        jimmerMapstructKaptDependencyConfigured shouldBe true
+    }
+
     // ArgonarioD:
     // I have no idea why this test fails when executed with the gradle task test,
     // but it passes when this test function or this test spec class is run individually.

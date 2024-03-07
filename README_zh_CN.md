@@ -18,6 +18,7 @@
     - Java: `jimmer-sql` 和 `jimmer-apt`
     - Kotlin: `jimmer-sql-kotlin` 和 `jimmer-ksp`
 - 如果项目是 Spring Boot 项目，使用 `jimmer-spring-boot-starter` 代替 `jimmer-sql` 和 `jimmer-sql-kotlin`。
+- 如果项目使用了 MapStruct、Kotlin 与 KAPT，自动添加 `jimmer-mapstruct-apt` KAPT 依赖。
 - 支持 Jimmer 嵌入 Swagger UI 的依赖的一键添加和版本管理。
 - 支持**非官方** Quarkus 扩展 `io.github.flynndi:quarkus-jimmer` 依赖的一键添加和版本管理。
 - 如果项目是 Quarkus Kotlin 项目，自动解决 quarkus 与 ksp 代码生成任务的循环依赖导致无法通过编译的问题。

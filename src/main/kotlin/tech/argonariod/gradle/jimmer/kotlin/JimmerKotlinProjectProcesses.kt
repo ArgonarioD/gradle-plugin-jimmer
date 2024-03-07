@@ -76,6 +76,19 @@ private fun Project.configureJimmerKotlinDependencies(
         )
     )
 
+    if (plugins.hasPlugin(MavenArtifactIds.KOTLIN_KAPT_PLUGIN_ID)) {
+        with(configurations.kaptConfiguration.dependencies) {
+            if (any { it.name.startsWith("mapstruct-processor") }) {
+                add(
+                    dependencyHandler.createJimmerDependency(
+                        MavenArtifactIds.JIMMER_MAPSTRUCT_APT_ARTIFACT_ID,
+                        jimmerVersion
+                    )
+                )
+            }
+        }
+    }
+
     if (enableEmbeddedSwaggerUi) {
         configurations.runtimeOnlyConfiguration.dependencies.add(
             dependencyHandler.createJimmerDependency(
