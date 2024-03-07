@@ -16,6 +16,12 @@ abstract class JimmerExtension {
     abstract val language: Property<JimmerLanguage>
 
     /**
+     * This property will make the `org.babyfish.jimmer:jimmer-sql` and `org.babyfish.jimmer:jimmer-sql-kotlin` dependencies to be `compileOnly` instead of `implementation`,
+     * and add the `org.babyfish.jimmer:jimmer-core` or `org.babyfish.jimmer:jimmer-core-kotlin` dependency to `implementation` configuration.
+     */
+    abstract val ormCompileOnly: Property<Boolean>
+
+    /**
      * `io.github.flynndi:quarkus-jimmer` the unofficial Quarkus Jimmer extension is not available for Kotlin now.
      * So when the language is set to [JimmerLanguage.KOTLIN], this property will take no effect.
      *

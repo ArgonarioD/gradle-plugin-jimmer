@@ -16,6 +16,7 @@ internal fun Project.configureAsKotlinProject(jimmerExtension: JimmerExtension) 
     val jimmerVersion = getJimmerVersion(jimmerExtension) ?: return
     configureJimmerKotlinDependencies(
         jimmerVersion,
+        jimmerExtension.ormCompileOnly.getOrElse(false),
         jimmerExtension.client.enableEmbeddedSwaggerUi.getOrElse(false)
     )
     plugins.withType(KotlinPluginWrapper::class.java) {
@@ -25,29 +26,47 @@ internal fun Project.configureAsKotlinProject(jimmerExtension: JimmerExtension) 
         jimmerExtension.applyToKspExtension(extensions.getByType(KspExtension::class.java))
     }
 
-    if (plugins.hasPlugin("io.quarkus")) {
+    if (plugins.hasPlugin(MavenArtifactIds.QUARKUS_PLUGIN_ID)) {
         resolveQuarkusKspConflicts()
     }
 }
 
-private fun Project.configureJimmerKotlinDependencies(jimmerVersion: String, enableEmbeddedSwaggerUi: Boolean) {
+private fun Project.configureJimmerKotlinDependencies(
+    jimmerVersion: String,
+    ormCompileOnly: Boolean,
+    enableEmbeddedSwaggerUi: Boolean
+) {
     val dependencyHandler = dependencies
-    with(configurations.implementationConfiguration.dependencies) {
-        if (any { it.name.startsWith("spring-boot-starter") }) {
-            add(
-                dependencyHandler.createJimmerDependency(
-                    MavenArtifactIds.JIMMER_SPRING_BOOT_STARTER_ARTIFACT_ID,
-                    jimmerVersion
-                )
+    val implementationDependencies = configurations.implementationConfiguration.dependencies
+    val compileOnlyDependencies = configurations.compileOnlyConfiguration.dependencies
+
+    if (implementationDependencies.any { it.name.startsWith("spring-boot-starter") }) {
+        implementationDependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_SPRING_BOOT_STARTER_ARTIFACT_ID,
+                jimmerVersion
             )
-        } else {
-            add(
-                dependencyHandler.createJimmerDependency(
-                    MavenArtifactIds.JIMMER_SQL_KOTLIN_ARTIFACT_ID,
-                    jimmerVersion
-                )
+        )
+    } else if (ormCompileOnly) {
+        implementationDependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_CORE_KOTLIN_ARTIFACT_ID,
+                jimmerVersion
             )
-        }
+        )
+        compileOnlyDependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_SQL_KOTLIN_ARTIFACT_ID,
+                jimmerVersion
+            )
+        )
+    } else {
+        implementationDependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_SQL_KOTLIN_ARTIFACT_ID,
+                jimmerVersion
+            )
+        )
     }
 
     configurations.kspConfiguration.dependencies.add(

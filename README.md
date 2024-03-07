@@ -80,6 +80,7 @@ jimmer {
     version = 'latest.release'
     quarkusExtensionVersion = 'latest.release'
     language = JimmerLanguage.JAVA
+    ormCompileOnly = false
     dto {
         dirs = ['src/main/dto', 'src/main/dto2']
         testDirs = ['src/test/dto', 'src/test/dto2']
@@ -106,6 +107,7 @@ import tech.argonariod.gradle.jimmer.JimmerLanguage
 jimmer {
     version = "latest.release"
     language = JimmerLanguage.KOTLIN
+    ormCompileOnly = false
     dto {
         mutable = true
         dirs = listOf("src/main/dto", "src/main/dto2")

@@ -12,6 +12,7 @@ internal fun Project.configureAsJavaProject(jimmerExtension: JimmerExtension) {
     configureJimmerJavaDependencies(
         jimmerVersion,
         jimmerExtension.quarkusExtensionVersion.orNull,
+        jimmerExtension.ormCompileOnly.getOrElse(false),
         jimmerExtension.client.enableEmbeddedSwaggerUi.getOrElse(false)
     )
 
@@ -23,33 +24,48 @@ internal fun Project.configureAsJavaProject(jimmerExtension: JimmerExtension) {
 private fun Project.configureJimmerJavaDependencies(
     jimmerVersion: String,
     quarkusExtensionVersion: String?,
+    ormCompileOnly: Boolean,
     enableEmbeddedSwaggerUi: Boolean
 ) {
     val dependencyHandler = dependencies
-    with(configurations.implementationConfiguration.dependencies) {
-        if (quarkusExtensionVersion != null) {
-            add(
-                dependencyHandler.create(
-                    MavenArtifactIds.QUARKUS_JIMMER_GROUP_ID,
-                    MavenArtifactIds.QUARKUS_JIMMER_ARTIFACT_ID,
-                    quarkusExtensionVersion
-                )
+    val implementationDependencies = configurations.implementationConfiguration.dependencies
+    val compileOnlyDependencies = configurations.compileOnlyConfiguration.dependencies
+
+    if (quarkusExtensionVersion != null) {
+        implementationDependencies.add(
+            dependencyHandler.create(
+                MavenArtifactIds.QUARKUS_JIMMER_GROUP_ID,
+                MavenArtifactIds.QUARKUS_JIMMER_ARTIFACT_ID,
+                quarkusExtensionVersion
             )
-        } else if (any { it.name.startsWith("spring-boot-starter") }) {
-            add(
-                dependencyHandler.createJimmerDependency(
-                    MavenArtifactIds.JIMMER_SPRING_BOOT_STARTER_ARTIFACT_ID,
-                    jimmerVersion
-                )
+        )
+    } else if (implementationDependencies.any { it.name.startsWith("spring-boot-starter") }) {
+        implementationDependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_SPRING_BOOT_STARTER_ARTIFACT_ID,
+                jimmerVersion
             )
-        } else {
-            add(
-                dependencyHandler.createJimmerDependency(
-                    MavenArtifactIds.JIMMER_SQL_JAVA_ARTIFACT_ID,
-                    jimmerVersion
-                )
+        )
+    } else if (ormCompileOnly) {
+        implementationDependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_CORE_JAVA_ARTIFACT_ID,
+                jimmerVersion
             )
-        }
+        )
+        compileOnlyDependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_SQL_JAVA_ARTIFACT_ID,
+                jimmerVersion
+            )
+        )
+    } else {
+        implementationDependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_SQL_JAVA_ARTIFACT_ID,
+                jimmerVersion
+            )
+        )
     }
 
     configurations.aptConfiguration.dependencies.add(

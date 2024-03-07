@@ -16,6 +16,9 @@ internal inline fun DependencyHandler.createJimmerDependency(artifactId: String,
 internal inline val ConfigurationContainer.implementationConfiguration
     get() = getByName("implementation")
 
+internal inline val ConfigurationContainer.compileOnlyConfiguration
+    get() = getByName("compileOnly")
+
 internal inline val ConfigurationContainer.runtimeOnlyConfiguration
     get() = getByName("runtimeOnly")
 
