@@ -15,6 +15,8 @@ abstract class JimmerExtension {
     abstract val version: Property<String>
     abstract val language: Property<JimmerLanguage>
 
+    abstract val disableVersionNotSetWarning: Property<Boolean>
+
     /**
      * This property will make the `org.babyfish.jimmer:jimmer-sql` and `org.babyfish.jimmer:jimmer-sql-kotlin` dependencies to be `compileOnly` instead of `implementation`,
      * and add the `org.babyfish.jimmer:jimmer-core` or `org.babyfish.jimmer:jimmer-core-kotlin` dependency to `implementation` configuration.
@@ -122,8 +124,8 @@ abstract class JimmerJavaSourceConfiguration {
 
 internal fun Project.getJimmerVersion(jimmerExtension: JimmerExtension): String? {
     val result = jimmerExtension.version.orNull
-    if (result == null) {
-        logger.warn("[tech.argonariod.gradle-plugin-jimmer] jimmer.version is not set. Skipping Jimmer configuration.")
+    if (result == null && !jimmerExtension.disableVersionNotSetWarning.getOrElse(false)) {
+        logger.warn("[tech.argonariod.gradle-plugin-jimmer] jimmer.version for Project(path=\"$path\",name=\"$name\") is not set. Skipping Jimmer configuration.")
     }
     return result
 }

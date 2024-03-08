@@ -25,7 +25,7 @@ class KotlinProjectSpec : FunSpec({
         val result = gradleProject.gradleRunnerWithArguments("dependencies").build()
         var versionNotSetLogged = false
         for (line in result.output.lineSequence()) {
-            if (!versionNotSetLogged && line.startsWith("[tech.argonariod.gradle-plugin-jimmer] jimmer.version is not set. Skipping Jimmer configuration.")) {
+            if (!versionNotSetLogged && line.startsWith("[tech.argonariod.gradle-plugin-jimmer] jimmer.version for Project(path=\":\",name=\"test-project\") is not set. Skipping Jimmer configuration.")) {
                 versionNotSetLogged = true
             } else {
                 line shouldNotContain "jimmer"

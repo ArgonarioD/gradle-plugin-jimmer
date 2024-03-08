@@ -82,6 +82,7 @@ import tech.argonariod.gradle.jimmer.JimmerLanguage
 
 jimmer {
     version = 'latest.release'
+    disableVersionNotSetWarning = false
     quarkusExtensionVersion = 'latest.release'
     language = JimmerLanguage.JAVA
     ormCompileOnly = false
@@ -110,6 +111,7 @@ import tech.argonariod.gradle.jimmer.JimmerLanguage
 
 jimmer {
     version = "latest.release"
+    disableVersionNotSetWarning = false
     language = JimmerLanguage.KOTLIN
     ormCompileOnly = false
     dto {
