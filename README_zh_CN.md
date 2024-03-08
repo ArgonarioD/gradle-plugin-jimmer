@@ -67,6 +67,9 @@ jimmer {
 2. 重新加载你的 Gradle 项目，最新版本的 `org.babyfish.jimmer:jimmer-sql-kotlin` 和 `org.babyfish.jimmer:jimmer-ksp`
    就作为依赖项被添加到你的项目中了。
 
+> [!NOTE]
+> 如果你的项目中没有 `com.google.devtools.ksp` 插件，则本插件只会为你的项目添加 `org.babyfish.jimmer:jimmer-sql-kotlin` 等依赖，不会添加 `org.babyfish.jimmer:jimmer-ksp` 依赖。
+
 ### Spring Boot 项目
 
 如果你的项目中存在任何工件 ID 的开头为 `spring-boot-starter`

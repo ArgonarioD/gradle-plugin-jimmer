@@ -34,6 +34,37 @@ class KotlinProjectSpec : FunSpec({
         versionNotSetLogged shouldBe true
     }
 
+    test("project with no ksp") {
+        val gradleProject = createTestProjectFiles("test-project")
+        gradleProject.buildFile.writeText(
+            """
+            plugins {
+                kotlin("jvm") version "${kotlinVersion}"
+                id("tech.argonariod.gradle-plugin-jimmer")
+            }
+            
+            repositories {
+                mavenCentral()
+            }
+            
+            jimmer {
+                version = "latest.release"
+            }
+            """.trimIndent()
+        )
+        val result = gradleProject.gradleRunnerWithArguments("dependencies").build()
+        var jimmerDependencyConfigured = false
+        for (line in result.output.lineSequence()) {
+            if (!jimmerDependencyConfigured && line.contains("org.babyfish.jimmer:jimmer-sql-kotlin")) {
+                jimmerDependencyConfigured = true
+            }
+            if (jimmerDependencyConfigured) {
+                break
+            }
+        }
+        jimmerDependencyConfigured shouldBe true
+    }
+
     test("project with pure jimmer") {
         val gradleProject = createTestProjectFiles("test-project")
         gradleProject.buildFile.writeText(

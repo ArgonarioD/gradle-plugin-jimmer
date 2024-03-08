@@ -69,12 +69,14 @@ private fun Project.configureJimmerKotlinDependencies(
         )
     }
 
-    configurations.kspConfiguration.dependencies.add(
-        dependencyHandler.createJimmerDependency(
-            MavenArtifactIds.JIMMER_KSP_ARTIFACT_ID,
-            jimmerVersion
+    plugins.withType(KspGradleSubplugin::class.java) {
+        configurations.kspConfiguration.dependencies.add(
+            dependencyHandler.createJimmerDependency(
+                MavenArtifactIds.JIMMER_KSP_ARTIFACT_ID,
+                jimmerVersion
+            )
         )
-    )
+    }
 
     if (plugins.hasPlugin(MavenArtifactIds.KOTLIN_KAPT_PLUGIN_ID)) {
         with(configurations.kaptConfiguration.dependencies) {

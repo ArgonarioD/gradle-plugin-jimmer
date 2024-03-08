@@ -65,6 +65,9 @@ Reload your Gradle project, and the latest versions of `org.babyfish.jimmer:jimm
     ```
 2. Reload your Gradle project, and the latest versions of `org.babyfish.jimmer:jimmer-sql-kotlin` and `org.babyfish.jimmer:jimmer-ksp` will be added as dependencies to your project.
 
+> [!NOTE]
+> If your project does not include the `com.google.devtools.ksp` plugin, this plugin will only add dependencies such as `org.babyfish.jimmer:jimmer-sql-kotlin` to your project, without adding the `org.babyfish.jimmer:jimmer-ksp` dependency.
+
 ### Spring Boot Projects
 
 If any dependencies in your project have an artifact ID starting with `spring-boot-starter`, then `org.babyfish.jimmer:jimmer-spring-boot-starter` will replace `jimmer-sql` and `jimmer-sql-kotlin` mentioned above as dependencies in your project.

@@ -20,20 +20,21 @@ class JimmerPlugin : Plugin<Project> {
         // the KSP plugin will not create a KSP task.
         //
         // Therefore, provide a fake dependency first, and then remove that dependency after evaluation.
-        lateinit var kspDependencies: DependencySet
+        var kspDependencies: DependencySet? = null
         lateinit var tempPlaceholderKspDependency: Dependency
 
         plugins.withType(KspGradleSubplugin::class.java) {
-            kspDependencies = configurations.kspConfiguration.dependencies
-            tempPlaceholderKspDependency = dependencies.createJimmerDependency(
-                MavenArtifactIds.JIMMER_KSP_ARTIFACT_ID,
-                "latest.release"
-            )
-            kspDependencies.add(tempPlaceholderKspDependency)
+            kspDependencies = configurations.kspConfiguration.dependencies.also {
+                tempPlaceholderKspDependency = dependencies.createJimmerDependency(
+                    MavenArtifactIds.JIMMER_KSP_ARTIFACT_ID,
+                    "latest.release"
+                )
+                it.add(tempPlaceholderKspDependency)
+            }
         }
 
         afterEvaluate {
-            kspDependencies.remove(tempPlaceholderKspDependency)
+            kspDependencies?.remove(tempPlaceholderKspDependency)
             when (extension.language.orNull) {
                 JimmerLanguage.JAVA -> configureAsJavaProject(extension)
                 JimmerLanguage.KOTLIN -> configureAsKotlinProject(extension)
