@@ -40,7 +40,6 @@ abstract class JimmerExtension {
 
     @get:Nested
     abstract val immutable: JimmerImmutableConfiguration
-
     @Suppress("unused")
     fun immutable(action: Action<in JimmerImmutableConfiguration>) = action.execute(immutable)
 
@@ -76,7 +75,7 @@ abstract class JimmerImmutableConfiguration {
      *
      * This argument is only available for Kotlin, and the `JimmerModule` class is only needed for compatibility with version 0.7.47 and earlier.
      */
-    abstract val isModuleRequired: Property<Boolean>
+    abstract val generateJimmerModule: Property<Boolean>
 }
 
 abstract class JimmerDtoConfiguration {

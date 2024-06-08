@@ -119,7 +119,7 @@ private fun Project.configureKotlinSourceSets() {
 private fun JimmerExtension.applyToKspExtension(kspExtension: KspExtension) =
     with(kspExtension) {
         immutable.apply {
-            isModuleRequired.letNotNull {
+            generateJimmerModule.letNotNull {
                 arg("jimmer.immutable.isModuleRequired", it.toString())
             }
         }
