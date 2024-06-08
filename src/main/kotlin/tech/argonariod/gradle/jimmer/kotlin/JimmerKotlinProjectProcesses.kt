@@ -16,6 +16,7 @@ internal fun Project.configureAsKotlinProject(jimmerExtension: JimmerExtension) 
     val jimmerVersion = getJimmerVersion(jimmerExtension) ?: return
     configureJimmerKotlinDependencies(
         jimmerVersion,
+        jimmerExtension.quarkusExtensionVersion.orNull,
         jimmerExtension.ormCompileOnly.getOrElse(false),
         jimmerExtension.client.enableEmbeddedSwaggerUi.getOrElse(false)
     )
@@ -33,6 +34,7 @@ internal fun Project.configureAsKotlinProject(jimmerExtension: JimmerExtension) 
 
 private fun Project.configureJimmerKotlinDependencies(
     jimmerVersion: String,
+    quarkusExtensionVersion: String?,
     ormCompileOnly: Boolean,
     enableEmbeddedSwaggerUi: Boolean
 ) {
@@ -40,7 +42,15 @@ private fun Project.configureJimmerKotlinDependencies(
     val implementationDependencies = configurations.implementationConfiguration.dependencies
     val compileOnlyDependencies = configurations.compileOnlyConfiguration.dependencies
 
-    if (implementationDependencies.any { it.name.startsWith("spring-boot-starter") }) {
+    if (quarkusExtensionVersion != null) {
+        implementationDependencies.add(
+            dependencyHandler.create(
+                MavenArtifactIds.QUARKUS_JIMMER_GROUP_ID,
+                MavenArtifactIds.QUARKUS_JIMMER_ARTIFACT_ID,
+                quarkusExtensionVersion
+            )
+        )
+    } else if (implementationDependencies.any { it.name.startsWith("spring-boot-starter") }) {
         implementationDependencies.add(
             dependencyHandler.createJimmerDependency(
                 MavenArtifactIds.JIMMER_SPRING_BOOT_STARTER_ARTIFACT_ID,
@@ -108,6 +118,11 @@ private fun Project.configureKotlinSourceSets() {
 
 private fun JimmerExtension.applyToKspExtension(kspExtension: KspExtension) =
     with(kspExtension) {
+        immutable.apply {
+            isModuleRequired.letNotNull {
+                arg("jimmer.immutable.isModuleRequired", it.toString())
+            }
+        }
         dto.apply {
             mutable.letNotNull {
                 arg("jimmer.dto.mutable", it.toString())
@@ -117,6 +132,12 @@ private fun JimmerExtension.applyToKspExtension(kspExtension: KspExtension) =
             }
             testDirs.letNotEmpty {
                 arg("jimmer.dto.testDirs", it.joinToArgument())
+            }
+            defaultNullableInputModifier.letNotNull {
+                arg("jimmer.dto.defaultNullableInputModifier", it.value)
+            }
+            hibernateValidatorEnhancement.letNotNull {
+                arg("jimmer.dto.hibernateValidatorEnhancement", it.toString())
             }
         }
         client.apply {

@@ -94,6 +94,12 @@ private fun JimmerExtension.applyAnnotationProcessorArguments(javaCompileTask: J
             testDirs.letNotEmpty {
                 args.add("-Ajimmer.dto.testDirs=${it.joinToArgument()}")
             }
+            defaultNullableInputModifier.letNotNull {
+                args.add("-Ajimmer.dto.defaultNullableInputModifier=${it.value}")
+            }
+            hibernateValidatorEnhancement.letNotNull {
+                args.add("-Ajimmer.dto.hibernateValidatorEnhancement=${it}")
+            }
         }
         client.apply {
             checkedException.letNotNull {
@@ -113,6 +119,20 @@ private fun JimmerExtension.applyAnnotationProcessorArguments(javaCompileTask: J
                 }
                 excludes.letNotEmpty {
                     args.add("-Ajimmer.source.excludes=${it.joinToArgument()}")
+                }
+            }
+            entry.apply {
+                objects.letNotNull {
+                    args.add("-Ajimmer.entry.objects=${it}")
+                }
+                tables.letNotNull {
+                    args.add("-Ajimmer.entry.tables=${it}")
+                }
+                tableExes.letNotNull {
+                    args.add("-Ajimmer.entry.tableExes=${it}")
+                }
+                fetchers.letNotNull {
+                    args.add("-Ajimmer.entry.fetchers=${it}")
                 }
             }
         }

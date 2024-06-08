@@ -24,9 +24,6 @@ abstract class JimmerExtension {
     abstract val ormCompileOnly: Property<Boolean>
 
     /**
-     * `io.github.flynndi:quarkus-jimmer` the unofficial Quarkus Jimmer extension is not available for Kotlin now.
-     * So when the language is set to [JimmerLanguage.KOTLIN], this property will take no effect.
-     *
      * This property follows the rules defined in the ["Declaring Versions"](https://docs.gradle.org/current/userguide/single_versions.html) section of the Gradle documentation.
      * Therefore, when this property is set to `"latest.release"` or `"+"`,
      * your project will be configured to depend on the latest version of quarkus-jimmer from your configured repository.
@@ -40,6 +37,12 @@ abstract class JimmerExtension {
      * For more detailed information, please refer to [its GitHub repository page](https://github.com/flynndi/quarkus-jimmer-extension).
      */
     abstract val quarkusExtensionVersion: Property<String>
+
+    @get:Nested
+    abstract val immutable: JimmerImmutableConfiguration
+
+    @Suppress("unused")
+    fun immutable(action: Action<in JimmerImmutableConfiguration>) = action.execute(immutable)
 
     @get:Nested
     abstract val dto: JimmerDtoConfiguration
@@ -67,6 +70,15 @@ enum class JimmerLanguage {
     BOTH;
 }
 
+abstract class JimmerImmutableConfiguration {
+    /**
+     * Whether generate `JimmerModule` class or not, default to `false`.
+     *
+     * This argument is only available for Kotlin, and the `JimmerModule` class is only needed for compatibility with version 0.7.47 and earlier.
+     */
+    abstract val isModuleRequired: Property<Boolean>
+}
+
 abstract class JimmerDtoConfiguration {
     /**
      * Whether the dto properties are mutable or not, default to `false`.
@@ -84,6 +96,29 @@ abstract class JimmerDtoConfiguration {
      * Directories of jimmer-dto test source files, default to `["src/test/dto"]`
      */
     abstract val testDirs: ListProperty<String>
+
+    /**
+     * Default handling mode of nullable input properties.
+     *
+     * See details in [Handle Null Values](https://babyfish-ct.github.io/jimmer-doc/docs/mutation/save-command/input-dto/null-handling/#higher-level-configurations).
+     */
+    abstract val defaultNullableInputModifier: Property<JimmerDtoNullableInputModifier>
+
+    /**
+     * Input DTO with Dynamic fields will implement `org.hibernate.validator.Incubating.HibernateValidatorEnhancedBean` interface,
+     * default to false.
+     *
+     * See details in [babyfish-ct/jimmer#561](https://github.com/babyfish-ct/jimmer/issues/561).
+     */
+    abstract val hibernateValidatorEnhancement: Property<Boolean>
+}
+
+@Suppress("unused")
+enum class JimmerDtoNullableInputModifier(internal val value: String) {
+    FIXED("fixed"),
+    STATIC("static"),
+    DYNAMIC("dynamic"),
+    FUZZY("fuzzy")
 }
 
 abstract class JimmerClientConfiguration {
@@ -108,6 +143,14 @@ abstract class JimmerJavaOnlyConfiguration {
      */
     abstract val keepIsPrefix: Property<Boolean>
 
+    @get:Nested
+    abstract val entry: JimmerJavaEntryConfiguration
+
+    /**
+     * Class name configuration of composite jimmer entities.
+     */
+    @Suppress("unused")
+    fun entry(action: Action<JimmerJavaEntryConfiguration>) = action.execute(entry)
 }
 
 abstract class JimmerJavaSourceConfiguration {
@@ -120,6 +163,13 @@ abstract class JimmerJavaSourceConfiguration {
      * full package name or type element name like `"foo.bar","foo.bar.Test"`
      */
     abstract val excludes: ListProperty<String>
+}
+
+abstract class JimmerJavaEntryConfiguration {
+    abstract val objects: Property<String>
+    abstract val tables: Property<String>
+    abstract val tableExes: Property<String>
+    abstract val fetchers: Property<String>
 }
 
 internal fun Project.getJimmerVersion(jimmerExtension: JimmerExtension): String? {
